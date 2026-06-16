@@ -1,0 +1,168 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay-Extralight.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay-Light.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay-Regular.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay-Medium.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay-Semibold.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/ClashDisplay-Bold.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Light.woff") format("woff");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Regular.woff") format("woff");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Medium.woff") format("woff");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Bold.woff") format("woff");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Black.woff") format("woff");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 900;
+}
+
+:root {
+  --background: #080808;
+  --foreground: #f1f1ed;
+  --muted: #92928d;
+  --line: rgba(241, 241, 237, 0.14);
+  --font-clash-display: "Clash Display";
+  --font-satoshi: "Satoshi";
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  background: var(--background);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-satoshi), Arial, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.toolkit-marquee {
+  --toolkit-marquee-distance: calc((348px + 20px) * 12);
+  animation: toolkit-marquee 34s linear infinite;
+  will-change: transform;
+}
+
+.systems-list-marquee {
+  --systems-list-distance: calc(210px * 5);
+  animation: systems-list-marquee 26s linear infinite;
+  will-change: transform;
+}
+
+@keyframes toolkit-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(calc(-1 * var(--toolkit-marquee-distance)), 0, 0);
+  }
+}
+
+@keyframes systems-list-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, calc(-1 * var(--systems-list-distance)), 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toolkit-marquee,
+  .systems-list-marquee {
+    animation: none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
