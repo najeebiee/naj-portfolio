@@ -13,7 +13,7 @@ export const systems: SystemProject[] = [
     subtitle: "Commerce, membership, and customer operations platform",
     year: "2026",
     stack: ["Next.js", "React 19", "TypeScript", "Tailwind", "Supabase", "Vercel"],
-    preview: "/videos/systems/gutguard-commerce-member-platform.mp4",
+    preview: "/videos/systems/gutguard-commerce-member-platform-compressed.mp4",
     buttonLabel: "Open Project",
   },
   {
@@ -21,7 +21,7 @@ export const systems: SystemProject[] = [
     subtitle: "Sales monitoring and budget operations dashboard",
     year: "2026",
     stack: ["Next.js", "React 19", "TypeScript", "Tailwind", "Supabase", "Vercel"],
-    preview: "/videos/systems/sales-metrics-budget-operations.mp4",
+    preview: "/videos/systems/sales-metrics-budget-operations-compressed.mp4",
     buttonLabel: "Open Project",
   },
   {
@@ -29,7 +29,7 @@ export const systems: SystemProject[] = [
     subtitle: "Performance tracking and leaderboard operations system",
     year: "2026",
     stack: ["React", "Vite", "JavaScript", "Material UI", "Supabase", "Vercel"],
-    preview: "/videos/systems/battle-of-platoons-performance-leaderboard.mp4",
+    preview: "/videos/systems/battle-of-platoons-performance-leaderboard-compressed.mp4",
     buttonLabel: "Open Project",
   },
   {
@@ -37,7 +37,7 @@ export const systems: SystemProject[] = [
     subtitle: "Transaction intelligence and operational reporting console",
     year: "2026",
     stack: ["Next.js", "React 19", "TypeScript", "Tailwind", "Supabase", "Vercel"],
-    preview: "/videos/systems/guild-vault-transaction-intelligence-console.mp4",
+    preview: "/videos/systems/guild-vault-transaction-intelligence-console-compressed.mp4",
     buttonLabel: "Open Project",
   },
   {
@@ -45,7 +45,7 @@ export const systems: SystemProject[] = [
     subtitle: "Finance, event, and request operations system",
     year: "2026",
     stack: ["React", "TypeScript", "Vite", "Radix UI", "Lucide", "Sonner"],
-    preview: "/videos/systems/guildledger-finance-event-operations.mp4",
+    preview: "/videos/systems/guildledger-finance-event-operations-compressed.mp4",
     buttonLabel: "Open Project",
   },
 ];
