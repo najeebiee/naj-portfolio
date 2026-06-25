@@ -7,7 +7,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { AboutSection } from "@/components/about-section";
 import { ContactSection } from "@/components/contact-section";
 
@@ -25,74 +25,83 @@ export function AboutContactTransition() {
     stiffness: 68,
   });
 
-  const backgroundY = useTransform(
-    progress,
-    [0, 0.44, 1],
-    shouldReduceMotion ? ["0px", "0px", "0px"] : ["0px", "0px", "-960px"],
+  const bgYOutput = useMemo(
+    () => (shouldReduceMotion ? ["0px", "0px", "0px"] : ["0px", "0px", "-960px"]),
+    [shouldReduceMotion],
   );
-  const aboutScale = useTransform(
-    progress,
-    [0, 0.32, 0.44, 0.64, 0.82, 0.94, 1],
-    shouldReduceMotion
-      ? [1, 1, 1, 1, 1, 1, 1]
-      : [1, 1, 1, 0.72, 0.4, 0.2, 0.17],
-  );
-  const aboutY = useTransform(
-    progress,
-    [0, 0.58, 0.74, 0.9, 1],
-    shouldReduceMotion
-      ? ["0px", "0px", "0px", "0px", "0px"]
-      : ["0px", "0px", "120px", "300px", "340px"],
-  );
-  const aboutOpacity = useTransform(
-    progress,
-    [0, 0.9, 0.96, 1],
-    shouldReduceMotion ? [1, 1, 1, 1] : [1, 1, 0, 0],
+  const bgYInput = useMemo(() => [0, 0.44, 1], []);
+
+  const aboutScaleInput = useMemo(() => [0, 0.32, 0.44, 0.64, 0.82, 0.94, 1], []);
+  const aboutScaleOutput = useMemo(
+    () => (shouldReduceMotion ? [1, 1, 1, 1, 1, 1, 1] : [1, 1, 1, 0.72, 0.4, 0.2, 0.17]),
+    [shouldReduceMotion],
   );
 
-  const contactOpacity = useTransform(
-    progress,
-    [0.965, 0.99, 1],
-    shouldReduceMotion ? [1, 1, 1] : [0, 0.72, 1],
-  );
-  const contactY = useTransform(
-    progress,
-    [0.965, 1],
-    shouldReduceMotion ? ["0px", "0px"] : ["46px", "0px"],
-  );
-  const contactFilter = useTransform(
-    progress,
-    [0.965, 0.99, 1],
-    shouldReduceMotion
-      ? ["blur(0px)", "blur(0px)", "blur(0px)"]
-      : ["blur(8px)", "blur(3px)", "blur(0px)"],
-  );
-  const contactPointerEvents = useTransform(
-    progress,
-    [0, 0.96, 0.965],
-    ["none", "none", "auto"],
-  );
-  const watermarkOpacity = useTransform(
-    progress,
-    [0.88, 0.98, 1],
-    shouldReduceMotion ? [0.05, 0.05, 0.05] : [0, 0.04, 0.05],
+  const aboutYInput = useMemo(() => [0, 0.58, 0.74, 0.9, 1], []);
+  const aboutYOutput = useMemo(
+    () => (shouldReduceMotion ? ["0px", "0px", "0px", "0px", "0px"] : ["0px", "0px", "120px", "300px", "340px"]),
+    [shouldReduceMotion],
   );
 
-  const foregroundCloudOpacity = useTransform(
-    progress,
-    [0.5, 0.58, 1],
-    shouldReduceMotion ? [0, 0, 0] : [0, 1, 1],
+  const aboutOpacityInput = useMemo(() => [0, 0.9, 0.96, 1], []);
+  const aboutOpacityOutput = useMemo(
+    () => (shouldReduceMotion ? [1, 1, 1, 1] : [1, 1, 0, 0]),
+    [shouldReduceMotion],
   );
-  const foregroundCloudY = useTransform(
-    progress,
-    [0.5, 0.86, 1],
-    shouldReduceMotion ? ["0px", "0px", "0px"] : ["260px", "-54px", "-86px"],
+
+  const contactOpacityInput = useMemo(() => [0.965, 0.99, 1], []);
+  const contactOpacityOutput = useMemo(
+    () => (shouldReduceMotion ? [1, 1, 1] : [0, 0.72, 1]),
+    [shouldReduceMotion],
   );
-  const foregroundCloudScale = useTransform(
-    progress,
-    [0.54, 1],
-    shouldReduceMotion ? [1, 1] : [1, 1.08],
+
+  const contactYInput = useMemo(() => [0.965, 1], []);
+  const contactYOutput = useMemo(
+    () => (shouldReduceMotion ? ["0px", "0px"] : ["46px", "0px"]),
+    [shouldReduceMotion],
   );
+
+  const watermarkInput = useMemo(() => [0.88, 0.98, 1], []);
+  const watermarkOutput = useMemo(
+    () => (shouldReduceMotion ? [0.05, 0.05, 0.05] : [0, 0.04, 0.05]),
+    [shouldReduceMotion],
+  );
+
+  const cloudOpacityInput = useMemo(() => [0.5, 0.58, 1], []);
+  const cloudOpacityOutput = useMemo(
+    () => (shouldReduceMotion ? [0, 0, 0] : [0, 1, 1]),
+    [shouldReduceMotion],
+  );
+
+  const cloudYInput = useMemo(() => [0.5, 0.86, 1], []);
+  const cloudYOutput = useMemo(
+    () => (shouldReduceMotion ? ["0px", "0px", "0px"] : ["260px", "-54px", "-86px"]),
+    [shouldReduceMotion],
+  );
+
+  const cloudScaleInput = useMemo(() => [0.54, 1], []);
+  const cloudScaleOutput = useMemo(
+    () => (shouldReduceMotion ? [1, 1] : [1, 1.08]),
+    [shouldReduceMotion],
+  );
+
+  const contactFilterInput = useMemo(() => [0.965, 0.99, 1], []);
+  const contactFilterOutput = useMemo(() => ["blur(0px)", "blur(0px)", "blur(0px)"], []);
+  const contactPointerInput = useMemo(() => [0, 0.96, 0.965], []);
+  const contactPointerOutput = useMemo(() => ["none", "none", "auto"], []);
+
+  const backgroundY = useTransform(progress, bgYInput, bgYOutput);
+  const aboutScale = useTransform(progress, aboutScaleInput, aboutScaleOutput);
+  const aboutY = useTransform(progress, aboutYInput, aboutYOutput);
+  const aboutOpacity = useTransform(progress, aboutOpacityInput, aboutOpacityOutput);
+  const contactOpacity = useTransform(progress, contactOpacityInput, contactOpacityOutput);
+  const contactY = useTransform(progress, contactYInput, contactYOutput);
+  const contactFilter = useTransform(progress, contactFilterInput, contactFilterOutput);
+  const contactPointerEvents = useTransform(progress, contactPointerInput, contactPointerOutput);
+  const watermarkOpacity = useTransform(progress, watermarkInput, watermarkOutput);
+  const foregroundCloudOpacity = useTransform(progress, cloudOpacityInput, cloudOpacityOutput);
+  const foregroundCloudY = useTransform(progress, cloudYInput, cloudYOutput);
+  const foregroundCloudScale = useTransform(progress, cloudScaleInput, cloudScaleOutput);
 
   return (
     <section className="relative h-[2040px] bg-[#b3a17d]" ref={transitionRef}>
@@ -101,12 +110,18 @@ export function AboutContactTransition() {
           aria-hidden="true"
           className="absolute inset-0 z-0 bg-[#b3a17d]"
         >
-          <motion.img
-            alt=""
-            className="absolute left-0 top-0 h-[2040px] w-full object-cover object-top opacity-95"
-            src="/images/contact/cloud-bg-extended.png"
+          <motion.div
+            className="absolute left-0 top-0 h-[2040px] w-full will-change-transform"
             style={{ y: backgroundY }}
-          />
+          >
+            <img
+              alt=""
+              className="h-full w-full object-cover object-top opacity-95"
+              decoding="async"
+              loading="lazy"
+              src="/images/contact/cloud-bg-extended.png"
+            />
+          </motion.div>
         </div>
 
         <div className="absolute inset-0 z-10">
@@ -116,6 +131,7 @@ export function AboutContactTransition() {
               style={{
                 opacity: aboutOpacity,
                 scale: aboutScale,
+                willChange: "transform, opacity",
                 y: aboutY,
               }}
             >
@@ -133,6 +149,7 @@ export function AboutContactTransition() {
             style={{
               opacity: foregroundCloudOpacity,
               scale: foregroundCloudScale,
+              willChange: "transform, opacity",
               y: foregroundCloudY,
             }}
           >
@@ -140,6 +157,8 @@ export function AboutContactTransition() {
               alt=""
               aria-hidden="true"
               className="absolute inset-0 h-full w-full object-contain object-center"
+              decoding="async"
+              loading="lazy"
               src="/images/contact/cloud-no-bg.png"
             />
           </motion.div>
@@ -159,6 +178,7 @@ export function AboutContactTransition() {
             filter: contactFilter,
             opacity: contactOpacity,
             pointerEvents: contactPointerEvents,
+            willChange: "transform, opacity",
             y: contactY,
           }}
         >

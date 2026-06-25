@@ -62,7 +62,7 @@ function NajLogoModel({
       return;
     }
 
-    const elapsed = state.clock.getElapsedTime();
+    const elapsed = state.clock.elapsedTime;
     const cursor = cursorStateRef.current;
     const useCursor = cursor.active && !reduceCursorMotion;
     const targetPointerX = useCursor ? cursor.x : 0;
@@ -126,7 +126,7 @@ function ReflectionLights({
   const rimLightRef = useRef<THREE.DirectionalLight>(null);
 
   useFrame((state, delta) => {
-    const elapsed = state.clock.getElapsedTime();
+    const elapsed = state.clock.elapsedTime;
     const cursor = cursorStateRef.current;
     const useCursor = cursor.active && !reduceCursorMotion;
     const targetPointerX = useCursor ? cursor.x : 0;

@@ -1,6 +1,10 @@
 "use client";
 
 import {
+  memo,
+  useMemo,
+} from "react";
+import {
   motion,
   useReducedMotion,
   useScroll,
@@ -28,7 +32,7 @@ type SocialIconProps = {
   icon: string;
 };
 
-function SocialIcon({ icon }: SocialIconProps) {
+const SocialIcon = memo(function SocialIcon({ icon }: SocialIconProps) {
   const className = "size-[20px] shrink-0 text-white";
 
   if (icon === "linkedin") {
@@ -62,7 +66,7 @@ function SocialIcon({ icon }: SocialIconProps) {
       <circle cx="17.4" cy="6.7" fill="currentColor" r="1.35" />
     </svg>
   );
-}
+});
 
 type ContactSectionProps = {
   atmosphere?: boolean;
@@ -86,31 +90,35 @@ export function ContactSection({
     stiffness: 82,
   });
 
-  const bgY = useTransform(
-    progress,
-    [0, 1],
-    shouldReduceMotion ? ["0px", "0px"] : ["24px", "-24px"],
+  const baseInput = useMemo(() => [0, 1], []);
+  const opacityInput = useMemo(() => [0, 0.22, 0.42], []);
+
+  const bgYOutput = useMemo(
+    () => (shouldReduceMotion ? ["0px", "0px"] : ["24px", "-24px"]),
+    [shouldReduceMotion],
   );
-  const cloudY = useTransform(
-    progress,
-    [0, 1],
-    shouldReduceMotion ? ["0px", "0px"] : ["36px", "-48px"],
+  const cloudYOutput = useMemo(
+    () => (shouldReduceMotion ? ["0px", "0px"] : ["36px", "-48px"]),
+    [shouldReduceMotion],
   );
-  const markY = useTransform(
-    progress,
-    [0, 1],
-    shouldReduceMotion ? ["0px", "0px"] : ["34px", "-18px"],
+  const markYOutput = useMemo(
+    () => (shouldReduceMotion ? ["0px", "0px"] : ["34px", "-18px"]),
+    [shouldReduceMotion],
   );
-  const contentY = useTransform(
-    progress,
-    [0, 1],
-    shouldReduceMotion ? ["0px", "0px"] : ["26px", "-10px"],
+  const contentYOutput = useMemo(
+    () => (shouldReduceMotion ? ["0px", "0px"] : ["26px", "-10px"]),
+    [shouldReduceMotion],
   );
-  const contentOpacity = useTransform(
-    progress,
-    [0, 0.22, 0.42],
-    shouldReduceMotion ? [1, 1, 1] : [0, 0.72, 1],
+  const contentOpacityOutput = useMemo(
+    () => (shouldReduceMotion ? [1, 1, 1] : [0, 0.72, 1]),
+    [shouldReduceMotion],
   );
+
+  const bgY = useTransform(progress, baseInput, bgYOutput);
+  const cloudY = useTransform(progress, baseInput, cloudYOutput);
+  const markY = useTransform(progress, baseInput, markYOutput);
+  const contentY = useTransform(progress, baseInput, contentYOutput);
+  const contentOpacity = useTransform(progress, opacityInput, contentOpacityOutput);
 
   return (
     <section
@@ -123,12 +131,15 @@ export function ContactSection({
     >
       {atmosphere && (
         <div aria-hidden="true" className="absolute -inset-x-[12%] -inset-y-[14%]">
-          <motion.img
-            alt=""
-            className="h-full w-full object-cover object-center"
-            src="/images/contact/cloud-bg.png"
-            style={{ y: bgY }}
-          />
+          <motion.div className="h-full w-full" style={{ y: bgY }}>
+            <img
+              alt=""
+              className="h-full w-full object-cover object-center"
+              decoding="async"
+              loading="lazy"
+              src="/images/contact/cloud-bg.png"
+            />
+          </motion.div>
         </div>
       )}
 
@@ -147,12 +158,15 @@ export function ContactSection({
           aria-hidden="true"
           className="absolute -inset-x-[12%] -inset-y-[14%] z-20"
         >
-          <motion.img
-            alt=""
-            className="h-full w-full object-cover object-center"
-            src="/images/contact/cloud-no-bg.png"
-            style={{ y: cloudY }}
-          />
+          <motion.div className="h-full w-full" style={{ y: cloudY }}>
+            <img
+              alt=""
+              className="h-full w-full object-cover object-center"
+              decoding="async"
+              loading="lazy"
+              src="/images/contact/cloud-no-bg.png"
+            />
+          </motion.div>
         </div>
       )}
 
@@ -195,7 +209,11 @@ export function ContactSection({
               alt=""
               aria-hidden="true"
               className="h-full w-full object-cover"
+              decoding="async"
+              height={35}
+              loading="lazy"
               src="/images/about/portrait.png"
+              width={35}
             />
           </div>
           <p className="font-display text-[16px] font-semibold leading-normal text-white/85">

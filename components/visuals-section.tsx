@@ -1,6 +1,10 @@
 "use client";
 
 import {
+  memo,
+  useMemo,
+} from "react";
+import {
   motion,
   type MotionValue,
   useReducedMotion,
@@ -14,6 +18,14 @@ import { SplitText } from "@/components/split-text";
 
 const cardRotations = [8, -6, 7, -8, 6, -7, 8, -6];
 
+// Precompute per-card scroll range constants — deterministic from index, never change
+const cardRanges = visuals.map((_, index) => {
+  const start = 0.22 + index * 0.075;
+  const center = start + 0.075;
+  const end = start + 0.17;
+  return { center, end, start };
+});
+
 type VisualCardProps = {
   index: number;
   progress: MotionValue<number>;
@@ -21,26 +33,32 @@ type VisualCardProps = {
   visual: VisualProject;
 };
 
-function VisualCard({
+const VisualCard = memo(function VisualCard({
   index,
   progress,
   reduceMotion,
   visual,
 }: VisualCardProps) {
   const rotation = cardRotations[index % cardRotations.length];
-  const start = 0.22 + index * 0.075;
-  const center = start + 0.075;
-  const end = start + 0.17;
+  const { center, end, start } = cardRanges[index];
 
-  const x = useTransform(progress, [start, center, end], ["55vw", "0vw", "-55vw"]);
-  const y = useTransform(progress, [start, center, end], ["35vh", "0vh", "-35vh"]);
-  const rotate = useTransform(progress, [start, center, end], [rotation, 0, -rotation]);
-  const scale = useTransform(progress, [start, center, end], [0.85, 1, 0.9]);
-  const opacity = useTransform(
-    progress,
-    [start, center - 0.035, center + 0.05, end],
-    [0, 1, 1, 0],
+  // Stable array references — only recomputed if index changes (never in practice)
+  const xInput = useMemo(() => [start, center, end], [start, center, end]);
+  const xOutput = useMemo(() => ["55vw", "0vw", "-55vw"], []);
+  const yOutput = useMemo(() => ["35vh", "0vh", "-35vh"], []);
+  const rotateOutput = useMemo(() => [rotation, 0, -rotation], [rotation]);
+  const scaleOutput = useMemo(() => [0.85, 1, 0.9], []);
+  const opacityInput = useMemo(
+    () => [start, center - 0.035, center + 0.05, end],
+    [start, center, end],
   );
+  const opacityOutput = useMemo(() => [0, 1, 1, 0], []);
+
+  const x = useTransform(progress, xInput, xOutput);
+  const y = useTransform(progress, xInput, yOutput);
+  const rotate = useTransform(progress, xInput, rotateOutput);
+  const scale = useTransform(progress, xInput, scaleOutput);
+  const opacity = useTransform(progress, opacityInput, opacityOutput);
 
   return (
     <motion.div
@@ -65,13 +83,14 @@ function VisualCard({
             }
       }
     >
-      <article className="group relative w-[430px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[34px] bg-[#111] shadow-[0_28px_80px_rgba(0,0,0,0.42)] [backface-visibility:hidden] [clip-path:inset(0_round_34px)] lg:w-[560px]">
+      <article className="group relative w-[430px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[34px] bg-[#111] shadow-[0_28px_80px_rgba(0,0,0,0.42)] [backface-visibility:hidden] lg:w-[560px]">
         <img
           alt={visual.alt}
           className="block aspect-[0.78] h-auto w-full object-cover"
           decoding="async"
           draggable={false}
-          loading={index < 3 ? "eager" : "lazy"}
+          fetchPriority={index === 0 ? "high" : "auto"}
+          loading={index === 0 ? "eager" : "lazy"}
           src={visual.image}
         />
         <div
@@ -80,10 +99,10 @@ function VisualCard({
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-500 ease-out group-hover:bg-black/30 group-focus-within:bg-black/30"
+          className="pointer-events-none absolute inset-0 bg-black/0 transition-[background-color] duration-500 ease-out group-hover:bg-black/30 group-focus-within:bg-black/30"
         />
-        <div className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-[linear-gradient(180deg,rgba(5,5,5,0.08)_0%,rgba(5,5,5,0.34)_45%,rgba(5,5,5,0.86)_100%)] p-7 opacity-0 transition duration-500 ease-out group-hover:opacity-100 group-focus-within:opacity-100">
-          <div className="translate-y-5 transition duration-500 ease-out group-hover:translate-y-0 group-focus-within:translate-y-0">
+        <div className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-[linear-gradient(180deg,rgba(5,5,5,0.08)_0%,rgba(5,5,5,0.34)_45%,rgba(5,5,5,0.86)_100%)] p-7 opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus-within:opacity-100">
+          <div className="translate-y-5 transition-transform duration-500 ease-out group-hover:translate-y-0 group-focus-within:translate-y-0">
             <div className="mb-4 flex items-center justify-between gap-4 font-sans text-[12px] font-normal uppercase tracking-[0.16em] text-white/64 [font-weight:400]">
               <span>{visual.category}</span>
               <span>{visual.year}</span>
@@ -114,7 +133,7 @@ function VisualCard({
         </div>
         <button
           aria-label={`Open ${visual.title}`}
-          className="absolute bottom-5 right-5 z-10 flex size-12 items-center justify-center rounded-full border border-white/12 bg-[#1c1c1c]/92 font-sans text-[30px] font-normal leading-none text-white backdrop-blur-sm transition duration-500 ease-out [font-weight:400] hover:bg-white hover:text-[#050505] group-hover:rotate-45 group-hover:border-white/28 group-focus-within:rotate-45 group-focus-within:border-white/28"
+          className="absolute bottom-5 right-5 z-10 flex size-12 items-center justify-center rounded-full border border-white/12 bg-[#1c1c1c]/92 font-sans text-[30px] font-normal leading-none text-white transition-[transform,background-color,border-color,color] duration-500 ease-out [font-weight:400] hover:bg-white hover:text-[#050505] group-hover:rotate-45 group-hover:border-white/28 group-focus-within:rotate-45 group-focus-within:border-white/28"
           type="button"
         >
           +
@@ -122,7 +141,7 @@ function VisualCard({
       </article>
     </motion.div>
   );
-}
+});
 
 export function VisualsSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -132,37 +151,31 @@ export function VisualsSection() {
     target: sectionRef,
   });
   const smoothProgress = useSpring(scrollYProgress, {
-    damping: 38,
-    mass: 0.45,
-    stiffness: 90,
+    damping: 50,
+    mass: 0.3,
+    stiffness: 120,
   });
-  const titleOpacity = useTransform(
-    smoothProgress,
-    [0, 0.055, 0.12, 0.2, 0.88, 1],
-    [0, 1, 1, 0.075, 0.075, 0.015],
-  );
-  const titleScale = useTransform(
-    smoothProgress,
-    [0, 0.12, 0.2],
-    [0.72, 1, 1.04],
-  );
-  const titleY = useTransform(smoothProgress, [0, 0.12, 0.2], [70, 0, -18]);
-  const calmOverlayOpacity = useTransform(
-    smoothProgress,
-    [0.88, 0.96, 1],
-    [0, 0.3, 0.56],
-  );
-  const grayWashOpacity = useTransform(
-    smoothProgress,
-    [0.76, 0.9, 1],
-    [0, 0.58, 0.42],
-  );
-  const stageY = useTransform(
-    smoothProgress,
-    [0.9, 1],
-    ["0px", "-58px"],
-  );
-  const stageOpacity = useTransform(smoothProgress, [0.92, 1], [1, 0.62]);
+
+  const titleInputRange = useMemo(() => [0, 0.055, 0.12, 0.2, 0.88, 1], []);
+  const titleOpacityOutput = useMemo(() => [0, 1, 1, 0.075, 0.075, 0.015], []);
+  const titleScaleInput = useMemo(() => [0, 0.12, 0.2], []);
+  const titleScaleOutput = useMemo(() => [0.72, 1, 1.04], []);
+  const titleYOutput = useMemo(() => [70, 0, -18], []);
+  const calmInput = useMemo(() => [0.88, 0.96, 1], []);
+  const calmOutput = useMemo(() => [0, 0.3, 0.56], []);
+  const grayInput = useMemo(() => [0.76, 0.9, 1], []);
+  const grayOutput = useMemo(() => [0, 0.58, 0.42], []);
+  const stageYInput = useMemo(() => [0.9, 1], []);
+  const stageYOutput = useMemo(() => ["0px", "-58px"], []);
+  const stageOpacityOutput = useMemo(() => [1, 0.62], []);
+
+  const titleOpacity = useTransform(smoothProgress, titleInputRange, titleOpacityOutput);
+  const titleScale = useTransform(smoothProgress, titleScaleInput, titleScaleOutput);
+  const titleY = useTransform(smoothProgress, titleScaleInput, titleYOutput);
+  const calmOverlayOpacity = useTransform(smoothProgress, calmInput, calmOutput);
+  const grayWashOpacity = useTransform(smoothProgress, grayInput, grayOutput);
+  const stageY = useTransform(smoothProgress, stageYInput, stageYOutput);
+  const stageOpacity = useTransform(smoothProgress, stageYInput, stageOpacityOutput);
 
   return (
     <section
@@ -186,7 +199,7 @@ export function VisualsSection() {
           </motion.h2>
         </div>
 
-        <motion.div className="absolute inset-0 z-10" style={reduceMotion ? undefined : { opacity: stageOpacity, y: stageY }}>
+        <motion.div className="absolute inset-0 z-10" style={reduceMotion ? undefined : { opacity: stageOpacity, willChange: "transform, opacity", y: stageY }}>
           {visuals.map((visual, index) => (
             <VisualCard
               index={index}

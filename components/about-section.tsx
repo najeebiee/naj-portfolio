@@ -8,7 +8,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { SplitText } from "@/components/split-text";
 
 const tabs = [
@@ -36,8 +36,8 @@ const labels = [
 ];
 
 const reveal = {
-  hidden: { opacity: 0, y: 28, filter: "blur(8px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0 },
 };
 
 export function AboutSection() {
@@ -56,36 +56,23 @@ export function AboutSection() {
     stiffness: 86,
   });
 
-  const portraitY = useTransform(
-    smoothProgress,
-    [0, 0.36, 1],
-    ["0px", "0px", "0px"],
+  const nameYInput = useMemo(() => [0, 1], []);
+  const nameYOutput = useMemo(
+    () => (shouldReduceMotion ? ["0px", "0px"] : ["20px", "-20px"]),
+    [shouldReduceMotion],
   );
-  const portraitScale = useTransform(
-    smoothProgress,
-    [0, 0.38, 1],
-    [1, 1, 1],
+  const leftCopyYOutput = useMemo(
+    () => (shouldReduceMotion ? ["0px", "0px"] : ["34px", "-18px"]),
+    [shouldReduceMotion],
   );
-  const portraitOpacity = useTransform(
-    smoothProgress,
-    [0, 0.18, 0.42],
-    [1, 1, 1],
-  );
-  const portraitFilter = useTransform(
-    smoothProgress,
-    [0, 0.36],
-    ["blur(0px)", "blur(0px)"],
-  );
-  const nameY = useTransform(
-    smoothProgress,
-    [0, 1],
-    shouldReduceMotion ? ["0px", "0px"] : ["20px", "-20px"],
-  );
-  const leftCopyY = useTransform(
-    smoothProgress,
-    [0, 1],
-    shouldReduceMotion ? ["0px", "0px"] : ["34px", "-18px"],
-  );
+
+  const nameY = useTransform(smoothProgress, nameYInput, nameYOutput);
+  const leftCopyY = useTransform(smoothProgress, nameYInput, leftCopyYOutput);
+
+  const handleTabSelect = useCallback((tab: (typeof tabs)[number]) => {
+    setActiveTab(tab);
+  }, []);
+
   return (
     <section
       aria-labelledby="about-title"
@@ -93,24 +80,17 @@ export function AboutSection() {
       id="about"
       ref={sectionRef}
     >
-      <motion.div
-        aria-hidden="true"
-        className="absolute inset-0"
-        style={{
-          filter: portraitFilter,
-          opacity: portraitOpacity,
-          scale: portraitScale,
-          y: portraitY,
-        }}
-      >
+      <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#6d6d6d_0%,#303030_51%,#171717_100%)]" />
         <img
           alt=""
           aria-hidden="true"
           className="absolute inset-0 h-full w-full object-cover object-center"
+          decoding="async"
+          loading="lazy"
           src="/images/about/portrait.png"
         />
-      </motion.div>
+      </div>
 
       <div
         aria-hidden="true"
@@ -191,13 +171,13 @@ export function AboutSection() {
 
             return (
               <button
-                className={`w-fit font-display text-[24px] font-medium leading-none tracking-[2.4px] underline-offset-[5px] transition-colors duration-300 ${
+                className={`w-fit font-display text-[24px] font-medium leading-none tracking-[2.4px] underline-offset-[5px] transition-[color,text-decoration-color] duration-300 ${
                   isActive
                     ? "text-white underline"
                     : "text-[#c2c0c0] hover:text-white"
                 }`}
                 key={tab.label}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => handleTabSelect(tab)}
                 type="button"
               >
                 {tab.label}
@@ -213,17 +193,17 @@ export function AboutSection() {
         >
           <AnimatePresence mode="wait">
             <motion.p
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              animate={{ opacity: 1, y: 0 }}
               className="whitespace-pre-wrap font-sans text-[20px] font-normal leading-[1.36] tracking-[2px] text-[#c2c0c0] [font-weight:400]"
               exit={
                 shouldReduceMotion
                   ? { opacity: 0 }
-                  : { opacity: 0, y: -8, filter: "blur(4px)" }
+                  : { opacity: 0, y: -8 }
               }
               initial={
                 shouldReduceMotion
                   ? { opacity: 0 }
-                  : { opacity: 0, y: 12, filter: "blur(4px)" }
+                  : { opacity: 0, y: 12 }
               }
               key={activeTab.label}
               transition={{
