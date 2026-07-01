@@ -131,7 +131,6 @@ body {
 .systems-list-marquee {
   --systems-list-distance: calc(210px * 5);
   animation: systems-list-marquee 26s linear infinite;
-  will-change: transform;
 }
 
 @keyframes toolkit-marquee {
@@ -165,4 +164,8 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }

@@ -18,11 +18,15 @@ import { SplitText } from "@/components/split-text";
 
 const cardRotations = [8, -6, 7, -8, 6, -7, 8, -6];
 
+// Section is 7940px tall so visuals stays pinned while about-contact reveals over it.
+// All progress input ranges are remapped from the original 5900px by this factor.
+const SCALE = 5900 / 7940;
+
 // Precompute per-card scroll range constants — deterministic from index, never change
 const cardRanges = visuals.map((_, index) => {
-  const start = 0.22 + index * 0.075;
-  const center = start + 0.075;
-  const end = start + 0.17;
+  const start = (0.22 + index * 0.075) * SCALE;
+  const center = start + 0.075 * SCALE;
+  const end = start + 0.17 * SCALE;
   return { center, end, start };
 });
 
@@ -49,7 +53,7 @@ const VisualCard = memo(function VisualCard({
   const rotateOutput = useMemo(() => [rotation, 0, -rotation], [rotation]);
   const scaleOutput = useMemo(() => [0.85, 1, 0.9], []);
   const opacityInput = useMemo(
-    () => [start, center - 0.035, center + 0.05, end],
+    () => [start, center - 0.035 * SCALE, center + 0.05 * SCALE, end],
     [start, center, end],
   );
   const opacityOutput = useMemo(() => [0, 1, 1, 0], []);
@@ -83,7 +87,7 @@ const VisualCard = memo(function VisualCard({
             }
       }
     >
-      <article className="group relative w-[430px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[34px] bg-[#111] shadow-[0_28px_80px_rgba(0,0,0,0.42)] [backface-visibility:hidden] lg:w-[560px]">
+      <article className="group relative w-[430px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[34px] bg-[#111] shadow-[0_8px_32px_rgba(0,0,0,0.55)] [backface-visibility:hidden] lg:w-[560px]">
         <img
           alt={visual.alt}
           className="block aspect-[0.78] h-auto w-full object-cover"
@@ -151,21 +155,21 @@ export function VisualsSection() {
     target: sectionRef,
   });
   const smoothProgress = useSpring(scrollYProgress, {
-    damping: 50,
-    mass: 0.3,
-    stiffness: 120,
+    damping: 60,
+    mass: 0.15,
+    restDelta: 0.001,
+    restSpeed: 0.001,
+    stiffness: 180,
   });
 
-  const titleInputRange = useMemo(() => [0, 0.055, 0.12, 0.2, 0.88, 1], []);
+  const titleInputRange = useMemo(() => [0, 0.055 * SCALE, 0.12 * SCALE, 0.2 * SCALE, 0.88 * SCALE, SCALE], []);
   const titleOpacityOutput = useMemo(() => [0, 1, 1, 0.075, 0.075, 0.015], []);
-  const titleScaleInput = useMemo(() => [0, 0.12, 0.2], []);
+  const titleScaleInput = useMemo(() => [0, 0.12 * SCALE, 0.2 * SCALE], []);
   const titleScaleOutput = useMemo(() => [0.72, 1, 1.04], []);
   const titleYOutput = useMemo(() => [70, 0, -18], []);
-  const calmInput = useMemo(() => [0.88, 0.96, 1], []);
+  const calmInput = useMemo(() => [0.88 * SCALE, 0.96 * SCALE, SCALE], []);
   const calmOutput = useMemo(() => [0, 0.3, 0.56], []);
-  const grayInput = useMemo(() => [0.76, 0.9, 1], []);
-  const grayOutput = useMemo(() => [0, 0.58, 0.42], []);
-  const stageYInput = useMemo(() => [0.9, 1], []);
+  const stageYInput = useMemo(() => [0.9 * SCALE, SCALE], []);
   const stageYOutput = useMemo(() => ["0px", "-58px"], []);
   const stageOpacityOutput = useMemo(() => [1, 0.62], []);
 
@@ -173,14 +177,13 @@ export function VisualsSection() {
   const titleScale = useTransform(smoothProgress, titleScaleInput, titleScaleOutput);
   const titleY = useTransform(smoothProgress, titleScaleInput, titleYOutput);
   const calmOverlayOpacity = useTransform(smoothProgress, calmInput, calmOutput);
-  const grayWashOpacity = useTransform(smoothProgress, grayInput, grayOutput);
   const stageY = useTransform(smoothProgress, stageYInput, stageYOutput);
   const stageOpacity = useTransform(smoothProgress, stageYInput, stageOpacityOutput);
 
   return (
     <section
       aria-labelledby="visuals-title"
-      className="relative h-[5900px] bg-[#050505] text-white"
+      className="relative h-[7940px] bg-[#050505] text-white"
       id="visuals"
       ref={sectionRef}
     >
@@ -213,13 +216,7 @@ export function VisualsSection() {
 
         <motion.div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[15] bg-[radial-gradient(circle_at_48%_72%,rgba(230,230,230,0.34),rgba(150,150,150,0.18)_42%,transparent_70%),linear-gradient(180deg,transparent_0%,rgba(180,180,180,0.08)_48%,rgba(180,180,180,0.2)_76%,rgba(105,105,105,0.28)_100%)]"
-          style={reduceMotion ? { opacity: 0 } : { opacity: grayWashOpacity }}
-        />
-
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-20 bg-[linear-gradient(180deg,rgba(5,5,5,0)_0%,rgba(5,5,5,0.22)_42%,#050505_100%)]"
+          className="pointer-events-none absolute inset-0 z-[15] bg-[linear-gradient(180deg,transparent_0%,rgba(5,5,5,0.22)_42%,#050505_100%)]"
           style={reduceMotion ? { opacity: 0 } : { opacity: calmOverlayOpacity }}
         />
       </div>

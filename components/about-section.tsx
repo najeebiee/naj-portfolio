@@ -58,11 +58,11 @@ export function AboutSection() {
 
   const nameYInput = useMemo(() => [0, 1], []);
   const nameYOutput = useMemo(
-    () => (shouldReduceMotion ? ["0px", "0px"] : ["20px", "-20px"]),
+    () => (shouldReduceMotion ? ["0px", "0px"] : ["6px", "-6px"]),
     [shouldReduceMotion],
   );
   const leftCopyYOutput = useMemo(
-    () => (shouldReduceMotion ? ["0px", "0px"] : ["34px", "-18px"]),
+    () => (shouldReduceMotion ? ["0px", "0px"] : ["10px", "-6px"]),
     [shouldReduceMotion],
   );
 

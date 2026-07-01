@@ -1,6 +1,7 @@
 "use client";
 
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { memo, useCallback, useRef, useState } from "react";
 import { systems, type SystemProject } from "@/data/systems";
 import { SplitText } from "@/components/split-text";
 
@@ -28,7 +29,6 @@ const SystemButton = memo(function SystemButton({
       className={`group flex h-[210px] w-full cursor-pointer items-center justify-between gap-8 border-b border-white/16 px-[18px] py-0 text-left transition-colors duration-200 hover:bg-white/[0.025] lg:px-5 ${
         isSelected ? "text-white" : "text-white/50"
       }`}
-      key={`${system.title}-${index}`}
       onClick={() => onSelect(realIndex)}
       tabIndex={index >= systems.length ? -1 : 0}
       type="button"
@@ -57,61 +57,7 @@ export function SystemsSection() {
   const [previewIndex, setPreviewIndex] = useState(0);
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
   const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
   const selectedSystem = systems[previewIndex];
-
-  // Load and play the correct video imperatively — no src/autoPlay on the element
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    // Release previous video buffer before loading new one
-    video.pause();
-    video.removeAttribute("src");
-    video.load();
-
-    video.src = selectedSystem.preview;
-    video.load();
-    video.play().catch(() => {});
-
-    return () => {
-      // Release buffer when switching or unmounting
-      video.pause();
-      video.removeAttribute("src");
-      video.load();
-    };
-  }, [selectedSystem.preview]);
-
-  // Pause video when section scrolls out of view to free decode resources
-  useEffect(() => {
-    const section = sectionRef.current;
-    const video = videoRef.current;
-    if (!section || !video) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (transitionTimeoutRef.current) {
-        clearTimeout(transitionTimeoutRef.current);
-      }
-    };
-  }, []);
 
   const handleSystemSelect = useCallback((index: number) => {
     if (index === selectedIndex) return;
@@ -134,7 +80,6 @@ export function SystemsSection() {
       aria-labelledby="systems-title"
       className="h-auto min-h-[1080px] w-full overflow-hidden bg-[#050505] text-white lg:h-[1080px]"
       id="systems"
-      ref={sectionRef}
     >
       <div className="flex h-full max-w-none flex-col">
         <h2
@@ -174,26 +119,23 @@ export function SystemsSection() {
                     : "translate-y-4 opacity-0"
                 }`}
               >
-                {/* No src, no autoPlay — fully controlled by useEffect */}
-                <video
-                  ref={videoRef}
-                  aria-label={`${selectedSystem.title} preview`}
-                  className="h-full w-full object-cover opacity-65 transition-opacity duration-300"
-                  loop
-                  muted
-                  playsInline
-                  preload="none"
+                <img
+                  alt={`${selectedSystem.title} preview`}
+                  className="h-full w-full object-cover object-top opacity-65"
+                  decoding="async"
+                  loading="lazy"
+                  src={selectedSystem.image}
                 />
                 <div
                   aria-hidden="true"
                   className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/35 to-black/70 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                 />
-                <button
+                <Link
+                  href={`/systems/${selectedSystem.slug}`}
                   className="absolute left-1/2 top-1/2 inline-flex h-[50px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white bg-black/35 px-6 font-sans text-[15px] font-normal leading-none text-white opacity-0 transition-[opacity,background-color,color] duration-200 [font-weight:400] hover:bg-white hover:text-[#050505] group-hover:opacity-100"
-                  type="button"
                 >
                   {selectedSystem.buttonLabel}
-                </button>
+                </Link>
               </div>
             </div>
 

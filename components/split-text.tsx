@@ -12,6 +12,16 @@ type SplitTextProps = {
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
+const wordVariants = {
+  hidden: { opacity: 0, y: "0.82em" },
+  visible: { opacity: 1, y: "0em" },
+};
+
+const charVariants = {
+  hidden: { opacity: 0, y: "0.82em" },
+  visible: { opacity: 1, y: "0em" },
+};
+
 export function SplitText({
   className,
   delay = 0,
@@ -43,10 +53,7 @@ export function SplitText({
             <motion.span
               aria-hidden="true"
               className="inline-block will-change-transform"
-              variants={{
-                hidden: { opacity: 0, y: "0.82em", filter: "blur(8px)" },
-                visible: { opacity: 1, y: "0em", filter: "blur(0px)" },
-              }}
+              variants={wordVariants}
               transition={{ delay: delay + index * stagger, duration: 0.78, ease }}
             >
               {word}
@@ -81,10 +88,7 @@ export function SplitText({
                     aria-hidden="true"
                     className="inline-block will-change-transform"
                     custom={absoluteIndex}
-                    variants={{
-                      hidden: { opacity: 0, y: "0.82em", filter: "blur(10px)" },
-                      visible: { opacity: 1, y: "0em", filter: "blur(0px)" },
-                    }}
+                    variants={charVariants}
                     transition={{
                       delay: delay + absoluteIndex * stagger,
                       duration: 0.82,

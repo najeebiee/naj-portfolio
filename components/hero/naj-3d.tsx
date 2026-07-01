@@ -189,6 +189,19 @@ function ReflectionLights({
 export function Naj3D() {
   const cursorStateRef = useRef<CursorState>({ active: false, x: 0, y: 0 });
   const reduceCursorMotion = usePrefersReducedMotion();
+  const [heroVisible, setHeroVisible] = useState(true);
+
+  useEffect(() => {
+    const hero = document.getElementById("hero");
+    if (!hero) return;
+
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => setHeroVisible(entry.isIntersecting),
+      { threshold: 0 },
+    );
+    visibilityObserver.observe(hero);
+    return () => visibilityObserver.disconnect();
+  }, []);
 
   useEffect(() => {
     const hero = document.getElementById("hero");
@@ -263,6 +276,7 @@ export function Naj3D() {
         camera={{ fov: 34, position: [0, 0, 10.5] }}
         className="!block !h-[588px] !w-[980px]"
         dpr={[1, 1.75]}
+        frameloop={heroVisible ? "always" : "never"}
         gl={{ alpha: true, antialias: true }}
         resize={{ scroll: false }}
         shadows

@@ -6,10 +6,10 @@ import { useState } from "react";
 import { Container } from "@/components/container";
 
 const navigation = [
-  { href: "#systems", label: "Systems" },
-  { href: "#visuals", label: "Visuals" },
-  { href: "#about", label: "About" },
-  { href: "#contact", label: "Contact" },
+  { href: "/#systems", label: "Systems" },
+  { href: "/visuals", label: "Visuals" },
+  { href: "/#about", label: "About" },
+  { href: "/#contact-scroll-target", label: "Contact" },
 ];
 
 export function Navbar() {
@@ -79,7 +79,7 @@ export function Navbar() {
 
         <Link
           className="group relative z-10 inline-flex h-[50px] items-center justify-center overflow-hidden rounded-full border border-white px-8 font-sans text-[15px] font-normal leading-none tracking-normal text-white transition-colors duration-500 [font-weight:400] hover:text-[#050505]"
-          href="#contact"
+          href="/#contact-scroll-target"
         >
           <span className="absolute inset-0 translate-y-full rounded-full bg-white transition-transform duration-500 ease-out group-hover:translate-y-0" />
           <span className="relative">Let&apos;s talk</span>

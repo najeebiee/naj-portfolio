@@ -29,33 +29,33 @@ export function AboutContactTransition() {
     () => (shouldReduceMotion ? ["0px", "0px", "0px"] : ["0px", "0px", "-960px"]),
     [shouldReduceMotion],
   );
-  const bgYInput = useMemo(() => [0, 0.44, 1], []);
+  const bgYInput = useMemo(() => [0, 0.56, 1], []);
 
-  const aboutScaleInput = useMemo(() => [0, 0.32, 0.44, 0.64, 0.82, 0.94, 1], []);
+  const aboutScaleInput = useMemo(() => [0, 0.46, 0.58, 0.70, 0.84, 0.94, 1], []);
   const aboutScaleOutput = useMemo(
     () => (shouldReduceMotion ? [1, 1, 1, 1, 1, 1, 1] : [1, 1, 1, 0.72, 0.4, 0.2, 0.17]),
     [shouldReduceMotion],
   );
 
-  const aboutYInput = useMemo(() => [0, 0.58, 0.74, 0.9, 1], []);
+  const aboutYInput = useMemo(() => [0, 0.64, 0.76, 0.88, 0.96], []);
   const aboutYOutput = useMemo(
     () => (shouldReduceMotion ? ["0px", "0px", "0px", "0px", "0px"] : ["0px", "0px", "120px", "300px", "340px"]),
     [shouldReduceMotion],
   );
 
-  const aboutOpacityInput = useMemo(() => [0, 0.9, 0.96, 1], []);
+  const aboutOpacityInput = useMemo(() => [0, 0.72, 0.82, 0.90], []);
   const aboutOpacityOutput = useMemo(
     () => (shouldReduceMotion ? [1, 1, 1, 1] : [1, 1, 0, 0]),
     [shouldReduceMotion],
   );
 
-  const contactOpacityInput = useMemo(() => [0.965, 0.99, 1], []);
+  const contactOpacityInput = useMemo(() => [0.72, 0.90, 1], []);
   const contactOpacityOutput = useMemo(
     () => (shouldReduceMotion ? [1, 1, 1] : [0, 0.72, 1]),
     [shouldReduceMotion],
   );
 
-  const contactYInput = useMemo(() => [0.965, 1], []);
+  const contactYInput = useMemo(() => [0.72, 1], []);
   const contactYOutput = useMemo(
     () => (shouldReduceMotion ? ["0px", "0px"] : ["46px", "0px"]),
     [shouldReduceMotion],
@@ -67,28 +67,34 @@ export function AboutContactTransition() {
     [shouldReduceMotion],
   );
 
-  const cloudOpacityInput = useMemo(() => [0.5, 0.58, 1], []);
+  const cloudOpacityInput = useMemo(() => [0.62, 0.70, 1], []);
   const cloudOpacityOutput = useMemo(
     () => (shouldReduceMotion ? [0, 0, 0] : [0, 1, 1]),
     [shouldReduceMotion],
   );
 
-  const cloudYInput = useMemo(() => [0.5, 0.86, 1], []);
+  const cloudYInput = useMemo(() => [0.62, 0.88, 1], []);
   const cloudYOutput = useMemo(
     () => (shouldReduceMotion ? ["0px", "0px", "0px"] : ["260px", "-54px", "-86px"]),
     [shouldReduceMotion],
   );
 
-  const cloudScaleInput = useMemo(() => [0.54, 1], []);
+  const cloudScaleInput = useMemo(() => [0.66, 1], []);
   const cloudScaleOutput = useMemo(
     () => (shouldReduceMotion ? [1, 1] : [1, 1.08]),
     [shouldReduceMotion],
   );
 
-  const contactFilterInput = useMemo(() => [0.965, 0.99, 1], []);
+  const contactFilterInput = useMemo(() => [0.72, 0.90, 1], []);
   const contactFilterOutput = useMemo(() => ["blur(0px)", "blur(0px)", "blur(0px)"], []);
-  const contactPointerInput = useMemo(() => [0, 0.96, 0.965], []);
+  const contactPointerInput = useMemo(() => [0, 0.70, 0.72], []);
   const contactPointerOutput = useMemo(() => ["none", "none", "auto"], []);
+
+  const entryYInput = useMemo(() => [0, 0.12], []);
+  const entryYOutput = useMemo(
+    () => (shouldReduceMotion ? ["0px", "0px"] : ["100vh", "0px"]),
+    [shouldReduceMotion],
+  );
 
   const backgroundY = useTransform(progress, bgYInput, bgYOutput);
   const aboutScale = useTransform(progress, aboutScaleInput, aboutScaleOutput);
@@ -102,10 +108,12 @@ export function AboutContactTransition() {
   const foregroundCloudOpacity = useTransform(progress, cloudOpacityInput, cloudOpacityOutput);
   const foregroundCloudY = useTransform(progress, cloudYInput, cloudYOutput);
   const foregroundCloudScale = useTransform(progress, cloudScaleInput, cloudScaleOutput);
+  const entryY = useTransform(progress, entryYInput, entryYOutput);
 
   return (
-    <section className="relative h-[2040px] bg-[#b3a17d]" ref={transitionRef}>
-      <div className="sticky top-0 h-screen overflow-hidden">
+    <section className="relative h-[2040px]" ref={transitionRef}>
+      <div aria-hidden="true" className="absolute top-[1470px]" id="contact-scroll-target" />
+      <motion.div className="sticky top-0 h-screen overflow-hidden" style={{ y: entryY }}>
         <div
           aria-hidden="true"
           className="absolute inset-0 z-0 bg-[#b3a17d]"
@@ -184,7 +192,7 @@ export function AboutContactTransition() {
         >
           <ContactSection atmosphere={false} watermark={false} />
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

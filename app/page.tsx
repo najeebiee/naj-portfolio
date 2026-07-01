@@ -90,8 +90,12 @@ export default function Home() {
       </section>
 
       <SystemsSection />
-      <VisualsSection />
-      <AboutContactTransition />
+      <div className="relative">
+        <VisualsSection />
+        <div className="absolute inset-x-0 top-[5900px] h-[2040px]">
+          <AboutContactTransition />
+        </div>
+      </div>
     </main>
   );
 }

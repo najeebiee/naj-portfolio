@@ -26,7 +26,7 @@ export function HeroSection() {
   return (
     <section
       aria-labelledby="hero-title"
-      className="relative isolate h-[1080px] w-full overflow-hidden px-[50px] pb-[91px] pt-[176px]"
+      className="relative h-[1080px] w-full overflow-hidden px-[50px] pb-[91px] pt-[176px]"
       id="hero"
     >
       <motion.div
@@ -40,6 +40,7 @@ export function HeroSection() {
           id="hero-title"
           variants={lineReveal}
           transition={transition}
+          style={{ mixBlendMode: "difference" }}
         >
           <SplitText text="Smart Systems." />
         </motion.h1>
@@ -69,6 +70,7 @@ export function HeroSection() {
           className="relative z-10 mt-[300px] overflow-hidden text-right font-display text-[clamp(4.5rem,8.95vw,10.75rem)] font-medium leading-none tracking-normal text-white"
           variants={lineReveal}
           transition={{ ...transition, delay: shouldReduceMotion ? 0 : 0.08 }}
+          style={{ mixBlendMode: "difference" }}
         >
           <SplitText delay={0.08} text="Bold Visuals." />
         </motion.p>

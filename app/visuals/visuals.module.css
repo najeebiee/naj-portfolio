@@ -1,0 +1,628 @@
+.page {
+  background:
+    radial-gradient(circle at 72% 12%, rgba(154, 154, 150, 0.08), transparent 28rem),
+    linear-gradient(180deg, #000 0%, #050505 18%, #030303 100%);
+  color: #f1f1ed;
+  min-height: 100svh;
+  overflow-x: clip;
+}
+
+.opening {
+  align-items: center;
+  display: flex;
+  min-height: 124svh;
+  padding: 8rem clamp(1.4rem, 5vw, 5rem) 20rem;
+}
+
+.openingInner {
+  animation: opening-arrival 980ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  max-width: 58rem;
+}
+
+.eyebrow,
+.roomContext p,
+.artworkLabel,
+.focusMeta p,
+.focusMeta dt,
+.galleryTracker a {
+  font-family: var(--font-satoshi), Arial, sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  color: rgba(241, 241, 237, 0.42);
+  font-size: 0.78rem;
+  margin: 0 0 1.4rem;
+}
+
+.openingTitle {
+  font-family: var(--font-clash-display), Arial, sans-serif;
+  font-size: clamp(5.5rem, 15vw, 15rem);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 0.82;
+  margin: 0;
+}
+
+@keyframes opening-arrival {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.8rem, 0) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.openingInner > p:last-child {
+  color: rgba(241, 241, 237, 0.68);
+  font-size: clamp(1rem, 1.4vw, 1.35rem);
+  line-height: 1.65;
+  margin: 1.7rem 0 0;
+}
+
+.galleryTracker {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  left: clamp(1rem, 2vw, 2rem);
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+}
+
+.galleryTracker a {
+  color: rgba(241, 241, 237, 0.32);
+  font-size: 0.68rem;
+  text-decoration: none;
+  transition:
+    color 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.galleryTracker a::before {
+  background: var(--accent);
+  content: "";
+  display: inline-block;
+  height: 1px;
+  margin-right: 0.7rem;
+  opacity: 0.32;
+  transform: translateY(-0.22rem);
+  transition: width 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  width: 1.2rem;
+}
+
+.galleryTracker a[aria-current="true"] {
+  color: rgba(241, 241, 237, 0.88);
+  transform: translateX(0.35rem);
+}
+
+.galleryTracker a[aria-current="true"]::before {
+  opacity: 0.9;
+  width: 2.7rem;
+}
+
+.gallery {
+  min-height: var(--gallery-height);
+  overflow: hidden;
+  position: relative;
+}
+
+.gallery::before {
+  background:
+    linear-gradient(180deg, rgba(5, 5, 5, 0.95) 0%, transparent 16%, transparent 84%, rgba(5, 5, 5, 0.96) 100%),
+    radial-gradient(circle at 48% 26%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 34rem);
+  content: "";
+  inset: 0;
+  opacity: 0.48;
+  pointer-events: none;
+  position: absolute;
+}
+
+.roomContext {
+  left: max(5rem, calc((100vw - 1640px) / 2 + 4rem));
+  max-width: 28rem;
+  opacity: 0;
+  position: absolute;
+  top: 4.5rem;
+  transform: translate3d(0, 2rem, 0);
+  transition:
+    opacity 850ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 850ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 4;
+}
+
+.roomContext p {
+  color: color-mix(in srgb, var(--accent) 78%, white 22%);
+  font-size: 0.72rem;
+  margin: 0 0 1rem;
+}
+
+.roomContext h2 {
+  font-family: var(--font-clash-display), Arial, sans-serif;
+  font-size: clamp(3.5rem, 6vw, 7.8rem);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 0.88;
+  margin: 0;
+}
+
+.roomContext span {
+  color: rgba(241, 241, 237, 0.56);
+  display: block;
+  font-size: 0.96rem;
+  line-height: 1.7;
+  margin-top: 1.2rem;
+}
+
+.roomLight {
+  background:
+    radial-gradient(circle at 35% 16%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 32rem),
+    radial-gradient(circle at 72% 54%, rgba(255, 255, 255, 0.07), transparent 28rem);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.galleryViewport {
+  cursor: grab;
+  height: var(--gallery-height);
+  margin-inline: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  position: relative;
+  scrollbar-width: none;
+  touch-action: pan-y;
+  user-select: none;
+  width: 100%;
+  z-index: 2;
+}
+
+.galleryViewport:active {
+  cursor: grabbing;
+}
+
+.galleryViewport:focus-visible {
+  outline: none;
+}
+
+.galleryViewport::-webkit-scrollbar {
+  display: none;
+}
+
+.canvas {
+  height: var(--gallery-height);
+  margin-inline: max(2rem, calc((100vw - 1640px) / 2 + 2rem));
+  position: relative;
+  width: 3300px;
+}
+
+.landmark {
+  left: var(--landmark-left);
+  opacity: 0;
+  position: absolute;
+  top: var(--landmark-top);
+  transform: translate3d(0, 2.4rem, 0) rotate(var(--landmark-rotate)) scale(0.985);
+  transition:
+    opacity 920ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 920ms cubic-bezier(0.22, 1, 0.36, 1);
+  width: var(--landmark-width);
+  z-index: var(--landmark-z);
+}
+
+.logoImage {
+  display: block;
+  filter: drop-shadow(0 1.5rem 4rem rgba(0, 0, 0, 0.5));
+  height: auto;
+  width: 100%;
+}
+
+.artwork {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: zoom-in;
+  display: block;
+  height: var(--art-height);
+  left: var(--art-left);
+  opacity: 0;
+  padding: 0;
+  position: absolute;
+  text-align: left;
+  top: var(--art-top);
+  transform: translate3d(0, 3.2rem, 0) rotate(var(--art-rotate)) scale(0.985);
+  transition:
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+  width: var(--art-width);
+  z-index: var(--art-z);
+}
+
+.isRevealed,
+.roomContext.isRevealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) rotate(var(--art-rotate)) scale(1);
+}
+
+.landmark.isRevealed {
+  opacity: 0.88;
+  transform: translate3d(0, 0, 0) rotate(var(--landmark-rotate)) scale(1);
+}
+
+.roomContext.isRevealed {
+  transform: translate3d(0, 0, 0);
+}
+
+.artwork:hover,
+.artwork:focus-visible {
+  filter: saturate(1.05);
+  outline: 0;
+  transform: translate3d(0, -0.35rem, 0) rotate(var(--art-rotate)) scale(1.025);
+  transition-duration: 260ms;
+  z-index: 10;
+}
+
+.canvas:has(.artwork:hover) .artwork.isRevealed:not(:hover),
+.canvas:has(.artwork:focus-visible) .artwork.isRevealed:not(:focus-visible) {
+  opacity: 0.38;
+}
+
+.artworkImageWrap {
+  background: #101010;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.52);
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.artworkImageWrap::after {
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+  content: "";
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transition: opacity 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.artwork:hover .artworkImageWrap::after,
+.artwork:focus-visible .artworkImageWrap::after {
+  opacity: 1;
+}
+
+.artworkImage {
+  display: block;
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+}
+
+.artworkLabel {
+  align-items: center;
+  bottom: -2.2rem;
+  color: rgba(241, 241, 237, 0.72);
+  display: flex;
+  font-size: 0.66rem;
+  gap: 1rem;
+  justify-content: space-between;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  transform: translateY(-0.4rem);
+  transition:
+    opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.artworkLabel span:last-child {
+  color: color-mix(in srgb, var(--accent) 78%, white 22%);
+}
+
+.artwork:hover .artworkLabel,
+.artwork:focus-visible .artworkLabel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.roomPause {
+  height: 34svh;
+}
+
+.closing {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  min-height: 76svh;
+  justify-content: center;
+  opacity: 0;
+  padding: 7rem 1.5rem;
+  transform: translate3d(0, 2.2rem, 0);
+  transition:
+    opacity 850ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 850ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.closing.isRevealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.closing p {
+  font-family: var(--font-clash-display), Arial, sans-serif;
+  font-size: clamp(2.4rem, 7vw, 7rem);
+  line-height: 0.95;
+  margin: 0;
+}
+
+.closing a {
+  color: rgba(241, 241, 237, 0.68);
+  font-size: 1rem;
+  text-decoration-color: rgba(241, 241, 237, 0.24);
+  text-underline-offset: 0.4rem;
+  transition: color 220ms ease;
+}
+
+.closing a:hover,
+.closing a:focus-visible {
+  color: #f1f1ed;
+}
+
+.focusOverlay {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  position: fixed;
+  z-index: 80;
+}
+
+.focusFrame {
+  align-items: end;
+  display: grid;
+  gap: clamp(1.2rem, 3vw, 3rem);
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 24rem);
+  max-height: 92svh;
+  max-width: 92rem;
+  position: relative;
+  width: 100%;
+}
+
+.focusImageWrap {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 0;
+}
+
+.focusImage {
+  display: block;
+  height: auto;
+  max-height: 88svh;
+  max-width: 100%;
+  object-fit: contain;
+  width: auto;
+}
+
+.focusMeta {
+  border-left: 1px solid rgba(241, 241, 237, 0.14);
+  padding-left: clamp(1rem, 2vw, 2rem);
+}
+
+.focusMeta p {
+  color: rgba(241, 241, 237, 0.5);
+  font-size: 0.72rem;
+  margin: 0 0 1rem;
+}
+
+.focusMeta h2 {
+  font-family: var(--font-clash-display), Arial, sans-serif;
+  font-size: clamp(2.1rem, 3.6vw, 4.4rem);
+  font-weight: 500;
+  line-height: 0.95;
+  margin: 0 0 2rem;
+}
+
+.focusMeta dl {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+}
+
+.focusMeta div {
+  border-top: 1px solid rgba(241, 241, 237, 0.12);
+  display: grid;
+  gap: 0.25rem;
+  padding-top: 0.85rem;
+}
+
+.focusMeta dt {
+  color: rgba(241, 241, 237, 0.42);
+  font-size: 0.66rem;
+}
+
+.focusMeta dd {
+  color: rgba(241, 241, 237, 0.82);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.focusClose {
+  background: rgba(241, 241, 237, 0.08);
+  border: 1px solid rgba(241, 241, 237, 0.16);
+  color: #f1f1ed;
+  cursor: pointer;
+  font: inherit;
+  padding: 0.72rem 1rem;
+  position: absolute;
+  right: 0;
+  top: -3.4rem;
+}
+
+.preloadList {
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  width: 1px;
+}
+
+@media (max-width: 1180px) {
+  .galleryTracker {
+    display: none;
+  }
+
+  .gallery {
+    min-height: calc(var(--gallery-height) * 0.82);
+  }
+
+  .galleryViewport {
+    height: calc(var(--gallery-height) * 0.82);
+  }
+
+  .canvas {
+    margin-inline: 1.5rem;
+    transform: scale(0.82);
+    transform-origin: top center;
+    width: 3300px;
+  }
+
+  .roomContext {
+    left: 2rem;
+    top: 3rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .opening {
+    min-height: 112svh;
+    padding: 7rem 1.25rem 12rem;
+  }
+
+  .openingTitle {
+    font-size: clamp(4.8rem, 25vw, 7.6rem);
+  }
+
+  .gallery {
+    min-height: calc(var(--gallery-height) * 0.58);
+    padding: 7rem 0 5rem;
+  }
+
+  .gallery::before {
+    opacity: 0.72;
+  }
+
+  .roomContext {
+    left: auto;
+    margin-bottom: 4rem;
+    max-width: none;
+    padding: 0 1.1rem;
+    position: relative;
+    top: auto;
+  }
+
+  .roomContext h2 {
+    font-size: clamp(3rem, 17vw, 5rem);
+  }
+
+  .galleryViewport {
+    height: calc(var(--gallery-height) * 0.58);
+    scroll-snap-type: x proximity;
+  }
+
+  .canvas {
+    margin-inline: 1rem;
+    transform: scale(0.58);
+    transform-origin: top left;
+    width: 3300px;
+  }
+
+  .landmark,
+  .artwork {
+    scroll-margin-inline: 1rem;
+    scroll-snap-align: center;
+  }
+
+  .artworkLabel {
+    bottom: -1.7rem;
+    opacity: 1;
+    transform: none;
+  }
+
+  .roomPause {
+    height: 18svh;
+  }
+
+  .focusFrame {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+    max-height: none;
+  }
+
+  .focusMeta {
+    border-left: 0;
+    border-top: 1px solid rgba(241, 241, 237, 0.14);
+    padding-left: 0;
+    padding-top: 1.2rem;
+  }
+
+  .focusClose {
+    right: 0;
+    top: -3.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .galleryTracker a,
+  .galleryTracker a::before,
+  .openingInner,
+  .roomContext,
+  .landmark,
+  .artwork,
+  .artwork:hover,
+  .artwork:focus-visible,
+  .artworkImageWrap::after,
+  .artworkLabel,
+  .closing,
+  .closing a {
+    animation: none;
+    transition: none;
+  }
+
+  .roomContext,
+  .landmark,
+  .artwork,
+  .closing {
+    opacity: 1;
+  }
+
+  .landmark {
+    transform: rotate(var(--landmark-rotate));
+  }
+
+  .artwork {
+    transform: rotate(var(--art-rotate));
+  }
+
+  .closing,
+  .roomContext {
+    transform: none;
+  }
+}
