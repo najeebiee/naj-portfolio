@@ -64,6 +64,7 @@ export function Navbar() {
                 <Link
                   className="group relative block h-[15px] overflow-hidden font-sans text-[15px] font-normal leading-none tracking-normal text-white/88 [font-weight:400]"
                   href={item.href}
+                  scroll
                 >
                   <span className="block transition-transform duration-500 ease-out group-hover:-translate-y-full">
                     {item.label}
@@ -80,6 +81,7 @@ export function Navbar() {
         <Link
           className="group relative z-10 inline-flex h-[50px] items-center justify-center overflow-hidden rounded-full border border-white px-8 font-sans text-[15px] font-normal leading-none tracking-normal text-white transition-colors duration-500 [font-weight:400] hover:text-[#050505]"
           href="/#contact-scroll-target"
+          scroll
         >
           <span className="absolute inset-0 translate-y-full rounded-full bg-white transition-transform duration-500 ease-out group-hover:translate-y-0" />
           <span className="relative">Let&apos;s talk</span>

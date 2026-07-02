@@ -8,7 +8,7 @@ import {
   useTransform,
 } from "framer-motion";
 import Link from "next/link";
-import { useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { systems, type SystemProject } from "@/data/systems";
 import { Navbar } from "@/components/navbar";
 import { SplitText } from "@/components/split-text";
@@ -20,6 +20,10 @@ type Props = {
 export function SystemDetailPage({ system }: Props) {
   const shouldReduceMotion = useReducedMotion();
   const otherSystems = systems.filter((s) => s.slug !== system.slug);
+
+  useLayoutEffect(() => {
+    window.scrollTo({ left: 0, top: 0 });
+  }, [system.slug]);
 
   return (
     <main className="min-h-svh bg-[#080808] text-white">

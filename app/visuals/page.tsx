@@ -9,6 +9,7 @@ import {
   type PointerEvent,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -244,6 +245,11 @@ export default function VisualsPage() {
         return;
       }
 
+      const target = event.target as HTMLElement;
+      if (target.closest(`.${styles.artwork}`)) {
+        return;
+      }
+
       dragState.current = {
         active: true,
         moved: false,
@@ -290,6 +296,12 @@ export default function VisualsPage() {
 
   const handleViewportClickCapture = useCallback(
     (event: MouseEvent<HTMLDivElement>) => {
+      const target = event.target as HTMLElement;
+      if (target.closest(`.${styles.artwork}`)) {
+        dragState.current.moved = false;
+        return;
+      }
+
       if (!dragState.current.moved) {
         return;
       }
@@ -300,6 +312,14 @@ export default function VisualsPage() {
     },
     [],
   );
+
+  const handleGalleryNavClick = useCallback((galleryId: VisualGalleryId) => {
+    setActiveGallery(galleryId);
+  }, []);
+
+  useLayoutEffect(() => {
+    window.scrollTo({ left: 0, top: 0 });
+  }, []);
 
   useEffect(() => {
     const artworkNodes = Object.values(artworkRefs.current).filter(
@@ -327,25 +347,45 @@ export default function VisualsPage() {
       revealObserver.observe(node);
     }
 
-    const galleryObserver = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    const updateActiveGallery = () => {
+      const viewportCenter = window.innerHeight / 2;
+      let closestGallery: VisualGalleryId | null = null;
+      let closestDistance = Number.POSITIVE_INFINITY;
 
-        const id = visible?.target.getAttribute("data-gallery-id");
-        if (id) {
-          setActiveGallery(id as VisualGalleryId);
+      for (const [id, node] of Object.entries(galleryRefs.current)) {
+        if (!node) {
+          continue;
         }
-      },
-      { rootMargin: "-32% 0px -42% 0px", threshold: [0.08, 0.18, 0.32] },
-    );
+
+        const rect = node.getBoundingClientRect();
+        const intersectsViewport = rect.bottom > 0 && rect.top < window.innerHeight;
+        if (!intersectsViewport) {
+          continue;
+        }
+
+        const distance = Math.abs(rect.top - viewportCenter);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestGallery = id as VisualGalleryId;
+        }
+      }
+
+      if (closestGallery) {
+        setActiveGallery(closestGallery);
+      }
+    };
+
+    const galleryObserver = new IntersectionObserver(updateActiveGallery, {
+      rootMargin: "0px",
+      threshold: [0, 0.2, 0.5, 0.8, 1],
+    });
 
     for (const node of Object.values(galleryRefs.current)) {
       if (node) {
         galleryObserver.observe(node);
       }
     }
+    updateActiveGallery();
 
     return () => {
       revealObserver.disconnect();
@@ -405,6 +445,7 @@ export default function VisualsPage() {
             aria-current={activeGallery === gallery.id ? "true" : undefined}
             href={`#${gallery.id}`}
             key={gallery.id}
+            onClick={() => handleGalleryNavClick(gallery.id)}
             style={{ "--accent": gallery.accent } as CSSProperties}
           >
             {gallery.label}

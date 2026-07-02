@@ -206,7 +206,7 @@ export function VisualsSection() {
           {visuals.map((visual, index) => (
             <VisualCard
               index={index}
-              key={visual.title}
+              key={`${visual.title}-${visual.image}`}
               progress={smoothProgress}
               reduceMotion={reduceMotion}
               visual={visual}
